@@ -4,19 +4,12 @@
 //
 //  Copyright © 2019 Tiny Speck, Inc. All rights reserved.
 //
-
 #if os(iOS)
 import UIKit
 
-/**
- Helper animation function to keep animations consistent.
- */
 struct PanModalAnimator {
 
-    /**
-     Constant Animation Properties
-     */
-    struct Constants {
+    enum Defaults {
         static let defaultTransitionDuration: TimeInterval = 0.5
     }
 
@@ -24,7 +17,7 @@ struct PanModalAnimator {
                         config: PanModalPresentable?,
                         _ completion: PanModalPresentable.AnimationCompletionType? = nil) {
 
-        let transitionDuration = config?.transitionDuration ?? Constants.defaultTransitionDuration
+        let transitionDuration = config?.transitionDuration ?? Defaults.defaultTransitionDuration
         let springDamping = config?.springDamping ?? 1.0
         let animationOptions = config?.transitionAnimationOptions ?? []
 

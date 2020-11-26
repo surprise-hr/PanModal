@@ -36,10 +36,10 @@ open class PanModalPresentationController: UIPresentationController {
     /**
      Constants
      */
-    struct Constants {
-        static let indicatorYOffset = CGFloat(8.0)
-        static let snapMovementSensitivity = CGFloat(0.7)
-        static let dragIndicatorSize = CGSize(width: 36.0, height: 5.0)
+    enum Constants {
+        static let indicatorYOffset: CGFloat = 8.0
+        static let snapMovementSensitivity: CGFloat = 0.7
+        static let dragIndicatorSize: CGSize = .init(width: 64.0, height: 4.0)
     }
 
     // MARK: - Properties
@@ -455,14 +455,6 @@ private extension PanModalPresentationController {
          offsets it
          */
         scrollView.contentInset.bottom = presentingViewController.bottomLayoutGuide.length
-
-        /**
-         As we adjust the bounds during `handleScrollViewTopBounce`
-         we should assume that contentInsetAdjustmentBehavior will not be correct
-         */
-        if #available(iOS 11.0, *) {
-            scrollView.contentInsetAdjustmentBehavior = .never
-        }
     }
 
 }
