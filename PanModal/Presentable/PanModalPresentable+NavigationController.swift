@@ -8,29 +8,29 @@
 
 import UIKit
 
-final class PanNavigationController: UINavigationController, PanModalPresentable {
+open class PanNavigationController: UINavigationController, PanModalPresentable {
 
-    override func popViewController(animated: Bool) -> UIViewController? {
+    open override func popViewController(animated: Bool) -> UIViewController? {
         let viewController = super.popViewController(animated: animated)
         panModalSetNeedsLayoutUpdate()
         return viewController
     }
 
-    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+    open override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         super.pushViewController(viewController, animated: animated)
         panModalSetNeedsLayoutUpdate()
     }
 
     // MARK: - Pan Modal Presentable
-    var panScrollable: UIScrollView? {
+    public var panScrollable: UIScrollView? {
         return (topViewController as? PanModalPresentable)?.panScrollable
     }
 
-    var longFormHeight: PanModalHeight {
+    public var longFormHeight: PanModalHeight {
         return .maxHeight
     }
 
-    var shortFormHeight: PanModalHeight {
+    public var shortFormHeight: PanModalHeight {
         return longFormHeight
     }
 }
