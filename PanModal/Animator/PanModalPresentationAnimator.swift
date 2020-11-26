@@ -151,7 +151,7 @@ extension PanModalPresentationAnimator: UIViewControllerAnimatedTransitioning {
         guard
             let context = transitionContext,
             let presentable = panModalLayoutType(from: context)
-            else { return PanModalAnimator.Constants.defaultTransitionDuration }
+            else { return PanModalAnimator.Defaults.defaultTransitionDuration }
 
         return presentable.transitionDuration
     }
