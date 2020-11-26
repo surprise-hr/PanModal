@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension PanModalPresentable where Self: UIViewController {
+public extension PanModalPresentable where Self: UIViewController {
 
     var panScrollable: UIScrollView? {
         nil
