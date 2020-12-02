@@ -175,7 +175,7 @@ open class PanModalPresentationController: UIPresentationController {
     override public func presentationTransitionWillBegin() {
 
         guard let containerView = containerView
-            else { return }
+        else { return }
 
         layoutBackgroundView(in: containerView)
         layoutPresentedView(in: containerView)
@@ -219,7 +219,7 @@ open class PanModalPresentationController: UIPresentationController {
 
     override public func dismissalTransitionDidEnd(_ completed: Bool) {
         if !completed { return }
-        
+
         presentable?.panModalDidDismiss()
     }
 
@@ -233,7 +233,7 @@ open class PanModalPresentationController: UIPresentationController {
             guard
                 let self = self,
                 let presentable = self.presentable
-                else { return }
+            else { return }
 
             self.adjustPresentedViewFrame()
             if presentable.shouldRoundTopCorners {
@@ -255,7 +255,7 @@ public extension PanModalPresentationController {
     func transition(to state: PresentationState) {
 
         guard presentable?.shouldTransition(to: state) == true
-            else { return }
+        else { return }
 
         presentable?.willTransition(to: state)
 
@@ -278,7 +278,7 @@ public extension PanModalPresentationController {
     func performUpdates(_ updates: () -> Void) {
 
         guard let scrollView = presentable?.panScrollable
-            else { return }
+        else { return }
 
         // Pause scroll observer
         scrollObserver?.invalidate()
@@ -337,7 +337,7 @@ private extension PanModalPresentationController {
          don't configure
          */
         guard let presentable = presentable
-            else { return }
+        else { return }
 
         /**
          ⚠️ If this class is NOT used in conjunction with the PanModalPresentationAnimator
@@ -365,12 +365,12 @@ private extension PanModalPresentationController {
     func adjustPresentedViewFrame() {
 
         guard let frame = containerView?.frame
-            else { return }
+        else { return }
 
         let adjustedSize = CGSize(width: frame.size.width, height: frame.size.height - anchoredYPosition)
         let panFrame = panContainerView.frame
         panContainerView.frame.size = frame.size
-        
+
         if ![shortFormYPosition, longFormYPosition].contains(panFrame.origin.y) {
             // if the container is already in the correct position, no need to adjust positioning
             // (rotations & size changes cause positioning to be out of sync)
@@ -423,7 +423,7 @@ private extension PanModalPresentationController {
     func configureViewLayout() {
 
         guard let layoutPresentable = presentedViewController as? PanModalPresentable.LayoutType
-            else { return }
+        else { return }
 
         shortFormYPosition = layoutPresentable.shortFormYPos
         longFormYPosition = layoutPresentable.longFormYPos
@@ -441,7 +441,7 @@ private extension PanModalPresentationController {
         guard
             let scrollView = presentable?.panScrollable,
             !scrollView.isScrolling
-            else { return }
+        else { return }
 
         /**
          Disable vertical scroll indicator until we start to scroll
@@ -471,10 +471,12 @@ private extension PanModalPresentationController {
         guard
             shouldRespond(to: recognizer),
             let containerView = containerView
-            else {
-                recognizer.setTranslation(.zero, in: recognizer.view)
-                return
+        else {
+            recognizer.setTranslation(.zero, in: recognizer.view)
+            return
         }
+
+        presentable?.willRespond(to: panGestureRecognizer)
 
         switch recognizer.state {
         case .began, .changed:
@@ -511,7 +513,7 @@ private extension PanModalPresentationController {
                     transition(to: .longForm)
 
                 } else if (nearest(to: presentedView.frame.minY, inValues: [longFormYPosition, containerView.bounds.height]) == longFormYPosition
-                    && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
+                            && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
 
                 } else {
@@ -551,10 +553,10 @@ private extension PanModalPresentationController {
         guard
             presentable?.shouldRespond(to: panGestureRecognizer) == true ||
                 !(panGestureRecognizer.state == .began || panGestureRecognizer.state == .cancelled)
-            else {
-                panGestureRecognizer.isEnabled = false
-                panGestureRecognizer.isEnabled = true
-                return false
+        else {
+            panGestureRecognizer.isEnabled = false
+            panGestureRecognizer.isEnabled = true
+            return false
         }
         return !shouldFail(panGestureRecognizer: panGestureRecognizer)
     }
@@ -563,7 +565,7 @@ private extension PanModalPresentationController {
      Communicate intentions to presentable and adjust subviews in containerView
      */
     func respond(to panGestureRecognizer: UIPanGestureRecognizer) {
-        presentable?.willRespond(to: panGestureRecognizer)
+
 
         var yDisplacement = panGestureRecognizer.translation(in: presentedView).y
 
@@ -607,8 +609,8 @@ private extension PanModalPresentationController {
             isPresentedViewAnchored,
             let scrollView = presentable?.panScrollable,
             scrollView.contentOffset.y > 0
-            else {
-                return false
+        else {
+            return false
         }
 
         let loc = panGestureRecognizer.location(in: presentedView)
@@ -635,8 +637,8 @@ private extension PanModalPresentationController {
         PanModalAnimator.animate({ [weak self] in
             self?.adjust(toYPosition: yPos)
             self?.isPresentedViewAnimating = true
-        }, config: presentable) { [weak self] didComplete in
-            self?.isPresentedViewAnimating = !didComplete
+        }, config: presentable) { [weak self] position in
+            self?.isPresentedViewAnimating = position != .end
         }
     }
 
@@ -645,7 +647,7 @@ private extension PanModalPresentationController {
      */
     func adjust(toYPosition yPos: CGFloat) {
         presentedView.frame.origin.y = max(yPos, anchoredYPosition)
-        
+
         guard presentedView.frame.origin.y > shortFormYPosition else {
             backgroundView.dimState = .max
             return
@@ -664,12 +666,12 @@ private extension PanModalPresentationController {
      Finds the nearest value to a given number out of a given array of float values
 
      - Parameters:
-        - number: reference float we are trying to find the closest value to
-        - values: array of floats we would like to compare against
+     - number: reference float we are trying to find the closest value to
+     - values: array of floats we would like to compare against
      */
     func nearest(to number: CGFloat, inValues values: [CGFloat]) -> CGFloat {
         guard let nearestVal = values.min(by: { abs(number - $0) < abs(number - $1) })
-            else { return number }
+        else { return number }
         return nearestVal
     }
 }
@@ -690,7 +692,7 @@ private extension PanModalPresentationController {
              Incase we have a situation where we have two containerViews in the same presentation
              */
             guard self?.containerView != nil
-                else { return }
+            else { return }
 
             self?.didPanOnScrollView(scrollView, change: change)
         }
@@ -710,7 +712,7 @@ private extension PanModalPresentationController {
         guard
             !presentedViewController.isBeingDismissed,
             !presentedViewController.isBeingPresented
-            else { return }
+        else { return }
 
         if !isPresentedViewAnchored && scrollView.contentOffset.y > 0 {
 
@@ -735,7 +737,7 @@ private extension PanModalPresentationController {
             }
 
         } else if presentedViewController.view.isKind(of: UIScrollView.self)
-            && !isPresentedViewAnimating && scrollView.contentOffset.y <= 0 {
+                    && !isPresentedViewAnimating && scrollView.contentOffset.y <= 0 {
 
             /**
              In the case where we drag down quickly on the scroll view and let go,
@@ -777,7 +779,7 @@ private extension PanModalPresentationController {
     func handleScrollViewTopBounce(scrollView: UIScrollView, change: NSKeyValueObservedChange<CGPoint>) {
 
         guard let oldYValue = change.oldValue?.y, scrollView.isDecelerating
-            else { return }
+        else { return }
 
         let yOffset = scrollView.contentOffset.y
         let presentedSize = containerView?.frame.size ?? .zero

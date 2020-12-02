@@ -183,8 +183,7 @@ public protocol PanModalPresentable: AnyObject {
     func shouldRespond(to panModalGestureRecognizer: UIPanGestureRecognizer) -> Bool
 
     /**
-     Notifies the delegate when the pan modal gesture recognizer state is either
-     `began` or `changed`. This method gives the delegate a chance to prepare
+     Notifies the delegate when the pan modal gesture recognizer state is. This method gives the delegate a chance to prepare
      for the gesture recognizer state change.
 
      For example, when the pan modal view is about to scroll.
