@@ -15,7 +15,7 @@ import UIKit
 public extension PanModalPresentable where Self: UIViewController {
 
     typealias AnimationBlockType = () -> Void
-    typealias AnimationCompletionType = (Bool) -> Void
+    typealias AnimationCompletionType = ((UIViewAnimatingPosition) -> Void)
 
     /**
      For Presentation, the object must be a UIViewController & confrom to the PanModalPresentable protocol.
