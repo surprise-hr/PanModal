@@ -602,6 +602,7 @@ private extension PanModalPresentationController {
         guard !shouldPrioritize(panGestureRecognizer: panGestureRecognizer) else {
             presentable?.panScrollable?.panGestureRecognizer.isEnabled = false
             presentable?.panScrollable?.panGestureRecognizer.isEnabled = true
+            presentable?.panModalStartDragging()
             return false
         }
 
@@ -610,10 +611,12 @@ private extension PanModalPresentationController {
             let scrollView = presentable?.panScrollable,
             scrollView.contentOffset.y > 0
         else {
+            presentable?.panModalStartDragging()
             return false
         }
 
         let loc = panGestureRecognizer.location(in: presentedView)
+        presentable?.panModalStopDragging()
         return (scrollView.frame.contains(loc) || scrollView.isScrolling)
     }
 
