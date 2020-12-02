@@ -115,4 +115,8 @@ public extension PanModalPresentable where Self: UIViewController {
     func panModalWillDismiss() { }
 
     func panModalDidDismiss() { }
+    
+    func panModalStartDragging() { }
+
+    func panModalStopDragging() { }
 }

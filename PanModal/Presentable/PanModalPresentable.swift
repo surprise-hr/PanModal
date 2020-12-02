@@ -232,5 +232,19 @@ public protocol PanModalPresentable: AnyObject {
      Default value is an empty implementation.
      */
     func panModalDidDismiss()
+    
+    /**
+     Notifies the delegate after the pan modal start dragging.
+
+     Default value is an empty implementation.
+     */
+    func panModalStartDragging()
+    
+    /**
+     Notifies the delegate after the pan modal stop dragging.
+
+     Default value is an empty implementation.
+     */
+    func panModalStopDragging()
 }
 #endif
