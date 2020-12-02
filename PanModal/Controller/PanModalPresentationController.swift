@@ -511,11 +511,10 @@ private extension PanModalPresentationController {
                  */
                 if velocity.y < 0 {
                     transition(to: .longForm)
-
+                    presentable?.panModalStopDragging()
                 } else if (nearest(to: presentedView.frame.minY, inValues: [longFormYPosition, containerView.bounds.height]) == longFormYPosition
                             && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
-
                 } else {
                     presentedViewController.dismiss(animated: true)
                 }
@@ -530,10 +529,9 @@ private extension PanModalPresentationController {
 
                 if position == longFormYPosition {
                     transition(to: .longForm)
-
+                    presentable?.panModalStopDragging()
                 } else if position == shortFormYPosition || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
-
                 } else {
                     presentedViewController.dismiss(animated: true)
                 }
@@ -556,9 +554,12 @@ private extension PanModalPresentationController {
         else {
             panGestureRecognizer.isEnabled = false
             panGestureRecognizer.isEnabled = true
+            presentable?.panModalStopDragging()
             return false
         }
-        return !shouldFail(panGestureRecognizer: panGestureRecognizer)
+        let shouldFailVar = shouldFail(panGestureRecognizer: panGestureRecognizer)
+        shouldFailVar ? presentable?.panModalStopDragging() :  presentable?.panModalStartDragging()
+        return !shouldFailVar
     }
 
     /**
@@ -602,7 +603,6 @@ private extension PanModalPresentationController {
         guard !shouldPrioritize(panGestureRecognizer: panGestureRecognizer) else {
             presentable?.panScrollable?.panGestureRecognizer.isEnabled = false
             presentable?.panScrollable?.panGestureRecognizer.isEnabled = true
-            presentable?.panModalStartDragging()
             return false
         }
 
@@ -611,12 +611,10 @@ private extension PanModalPresentationController {
             let scrollView = presentable?.panScrollable,
             scrollView.contentOffset.y > 0
         else {
-            presentable?.panModalStartDragging()
             return false
         }
 
         let loc = panGestureRecognizer.location(in: presentedView)
-        presentable?.panModalStopDragging()
         return (scrollView.frame.contains(loc) || scrollView.isScrolling)
     }
 
