@@ -10,7 +10,7 @@ import UIKit
 struct PanModalAnimator {
 
     enum Defaults {
-        static let defaultTransitionDuration: TimeInterval = 0.25
+        static let defaultTransitionDuration: TimeInterval = 0.5
     }
 
     static func animate(_ animations: @escaping PanModalPresentable.AnimationBlockType,
