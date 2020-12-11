@@ -43,7 +43,7 @@ public extension PanModalPresentable where Self: UIViewController {
     }
 
     var transitionAnimationOptions: UIView.AnimationOptions {
-       [.curveEaseIn, .allowUserInteraction, .beginFromCurrentState]
+       [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]
     }
 
     var panModalBackgroundColor: UIColor {
