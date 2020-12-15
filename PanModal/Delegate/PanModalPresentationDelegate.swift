@@ -20,6 +20,7 @@ import UIKit
  */
 public class PanModalPresentationDelegate: NSObject {
 
+    var driver = UIPercentDrivenInteractiveTransition()
     /**
      Returns an instance of the delegate, retained for the duration of presentation
      */
@@ -57,6 +58,9 @@ extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
         return controller
     }
 
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        driver
+    }
 }
 
 extension PanModalPresentationDelegate: UIAdaptivePresentationControllerDelegate, UIPopoverPresentationControllerDelegate {

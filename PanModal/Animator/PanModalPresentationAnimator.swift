@@ -117,10 +117,19 @@ public class PanModalPresentationAnimator: NSObject {
         let presentable = panModalLayoutType(from: transitionContext)
         let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
 
+        print(transitionContext.initialFrame(for: fromVC), transitionContext.finalFrame(for: fromVC), transitionContext.containerView, panView)
+        let startY = transitionContext.finalFrame(for: fromVC).height
+
+        print(startY, panView.frame.minY)
+        let finalY = transitionContext.finalFrame(for: fromVC).height - panView.frame.minY
+        let coef = (finalY * 100) / startY
+
+        print(coef)
+
         PanModalAnimator.animate({
             panView.frame.origin.y = transitionContext.containerView.frame.height
 
-        }, config: presentable) { position in
+        }, config: presentable, duration: PanModalAnimator.Defaults.defaultTransitionDuration * (Double(coef) / 100.0)) { position in
             if position == .end {
             fromVC.view.removeFromSuperview()
             // Calls viewDidAppear and viewDidDisappear

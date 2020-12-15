@@ -99,6 +99,8 @@ open class PanModalPresentationController: UIPresentationController {
         return presentedViewController as? PanModalPresentable
     }
 
+    public var interactor = UIPercentDrivenInteractiveTransition()
+
     // MARK: - Views
 
     /**
@@ -516,6 +518,9 @@ private extension PanModalPresentationController {
                             && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
+                    interactor.completionSpeed = 0.9
+
+                    interactor.finish()
                     presentedViewController.dismiss(animated: true)
                 }
 
@@ -533,6 +538,7 @@ private extension PanModalPresentationController {
                 } else if position == shortFormYPosition || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
+                    interactor.finish()
                     presentedViewController.dismiss(animated: true)
                 }
             }
