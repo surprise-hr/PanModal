@@ -52,10 +52,10 @@ extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
      */
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         driver.link(to: presented)
+        
         let controller = PanModalPresentationController(presentedViewController: presented,
                                                         presenting: presenting)
 
-        //controller.delegate = self
         controller.driver = driver
 
         return controller

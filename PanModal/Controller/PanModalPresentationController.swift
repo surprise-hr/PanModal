@@ -193,6 +193,7 @@ open class PanModalPresentationController: UIPresentationController {
     }
 
     override public func dismissalTransitionWillBegin() {
+        super.dismissalTransitionWillBegin()
         presentable?.panModalWillDismiss()
 
         guard let coordinator = presentedViewController.transitionCoordinator else {
@@ -232,7 +233,7 @@ open class PanModalPresentationController: UIPresentationController {
 
             self.adjustPresentedViewFrame()
             if presentable.shouldRoundTopCorners {
-                self.addRoundedCorners(to: self.presentedView)
+                //self.addRoundedCorners(to: self.presentedView)
             }
         })
     }

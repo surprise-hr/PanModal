@@ -140,7 +140,7 @@ extension PanModalDriver {
         panGestureRecognizer.delegate = self
 
         presentedController = controller
-        presentedController?.view.addGestureRecognizer(panGestureRecognizer)
+        //presentedController?.view.addGestureRecognizer(panGestureRecognizer)
 
 
     }
@@ -151,7 +151,7 @@ extension PanModalDriver {
         self.containerView = containerView
 
         configureViewLayout()
-        //self.presentedView.addGestureRecognizer(panGestureRecognizer)
+        self.containerView.addGestureRecognizer(panGestureRecognizer)
     }
 
     func handleTap() {
@@ -458,8 +458,6 @@ private extension PanModalDriver {
      Sets the y position of the presentedView & adjusts the backgroundView.
      */
     func adjust(toYPosition yPos: CGFloat) {
-
-        print(percentComplete)
         update(percentComplete + max(yPos/maxTranslation, anchoredYPosition/maxTranslation))
 
         //presentedView.frame.origin.y = max(yPos, anchoredYPosition)
