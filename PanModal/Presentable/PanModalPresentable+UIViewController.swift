@@ -27,7 +27,7 @@ public extension PanModalPresentable where Self: UIViewController {
      function in the PanModalPresentationController.
      */
     func panModalTransition(to state: PanModalPresentationController.PresentationState) {
-        presentedVC?.transition(to: state)
+        presentedVC?.driver?.transition(to: state)
     }
 
     /**

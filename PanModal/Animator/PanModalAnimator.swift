@@ -15,17 +15,18 @@ struct PanModalAnimator {
 
     static func animate(_ animations: @escaping PanModalPresentable.AnimationBlockType,
                         config: PanModalPresentable?,
-                        _ completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+                        _ completion: ((UIViewAnimatingPosition) -> Void)? = nil) -> UIViewPropertyAnimator {
 
         let transitionDuration = config?.transitionDuration ?? Defaults.defaultTransitionDuration
         let animationOptions = config?.transitionAnimationOptions ?? []
 
-        let animation = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: transitionDuration / 2,
+        let animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: transitionDuration / 2,
                                                                        delay: 0,
                                                                        options: animationOptions,
                                                                        animations: animations,
                                                                        completion: completion)
-        animation.startAnimation()
+        return animator
     }
 }
+
 #endif

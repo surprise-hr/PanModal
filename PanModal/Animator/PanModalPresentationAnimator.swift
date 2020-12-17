@@ -39,6 +39,8 @@ public class PanModalPresentationAnimator: NSObject {
      */
     private let transitionStyle: TransitionStyle
 
+    fileprivate var propertyAnimator: UIViewPropertyAnimator?
+
     /**
      Haptic feedback generator (during presentation)
      */
@@ -62,72 +64,80 @@ public class PanModalPresentationAnimator: NSObject {
     /**
      Animate presented view controller presentation
      */
-    private func animatePresentation(transitionContext: UIViewControllerContextTransitioning) {
+    private func animatePresentation(transitionContext: UIViewControllerContextTransitioning) -> UIViewPropertyAnimator {
+        let toVC = transitionContext.viewController(forKey: .to)
+        let fromVC = transitionContext.viewController(forKey: .from)
 
-        guard
-            let toVC = transitionContext.viewController(forKey: .to),
-            let fromVC = transitionContext.viewController(forKey: .from)
-            else { return }
 
         let presentable = panModalLayoutType(from: transitionContext)
 
         // Calls viewWillAppear and viewWillDisappear
-        fromVC.beginAppearanceTransition(false, animated: true)
+        fromVC?.beginAppearanceTransition(false, animated: true)
 
         // Presents the view in shortForm position, initially
         let yPos: CGFloat = presentable?.shortFormYPos ?? 0.0
 
         // Use panView as presentingView if it already exists within the containerView
-        let panView: UIView = transitionContext.containerView.panContainerView ?? toVC.view
-
+        let panView: UIView = transitionContext.containerView.panContainerView ?? toVC!.view
+        
         // Move presented view offscreen (from the bottom)
-        panView.frame = transitionContext.finalFrame(for: toVC)
+        panView.frame = transitionContext.finalFrame(for: toVC!)
         panView.frame.origin.y = transitionContext.containerView.frame.height
-
+        
         // Haptic feedback
         if presentable?.isHapticFeedbackEnabled == true {
             feedbackGenerator?.selectionChanged()
         }
+        
+        let duration = transitionDuration(using: transitionContext)
 
-        PanModalAnimator.animate({
+        let animator = UIViewPropertyAnimator(duration: duration, curve: .easeIn) {
             panView.frame.origin.y = yPos
-        }, config: presentable) { [weak self] position in
+        }
+
+        animator.addCompletion { [weak self] position in
             // Calls viewDidAppear and viewDidDisappear
             if position == .end {
-            fromVC.endAppearanceTransition()
-            transitionContext.completeTransition(true)
-            self?.feedbackGenerator = nil
+                fromVC?.endAppearanceTransition()
+                transitionContext.completeTransition(true)
+                self?.feedbackGenerator = nil
             }
-        }
-    }
 
+            self?.propertyAnimator = nil
+        }
+        return animator
+    }
+    
     /**
      Animate presented view controller dismissal
      */
-    private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
+    private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) -> UIViewPropertyAnimator {
 
-        guard
-            let toVC = transitionContext.viewController(forKey: .to),
-            let fromVC = transitionContext.viewController(forKey: .from)
-            else { return }
+        let toVC = transitionContext.viewController(forKey: .to)
+        let fromVC = transitionContext.viewController(forKey: .from)
 
         // Calls viewWillAppear and viewWillDisappear
-        toVC.beginAppearanceTransition(true, animated: true)
+        toVC?.beginAppearanceTransition(true, animated: true)
 
-        let presentable = panModalLayoutType(from: transitionContext)
-        let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
+        let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC!.view
 
-        PanModalAnimator.animate({
+        let duration = transitionDuration(using: transitionContext)
+
+        let animator = UIViewPropertyAnimator(duration: duration, curve: .easeIn) {
             panView.frame.origin.y = transitionContext.containerView.frame.height
-
-        }, config: presentable) { position in
-            if position == .end {
-            fromVC.view.removeFromSuperview()
-            // Calls viewDidAppear and viewDidDisappear
-            toVC.endAppearanceTransition()
-            transitionContext.completeTransition(true)
-            }
         }
+
+        animator.addCompletion { position in
+            if position == .end {
+                fromVC?.view.removeFromSuperview()
+                // Calls viewDidAppear and viewDidDisappear
+                toVC?.endAppearanceTransition()
+                transitionContext.completeTransition(true)
+            }
+            self.propertyAnimator = nil
+        }
+
+        return animator
     }
 
     /**
@@ -165,13 +175,23 @@ extension PanModalPresentationAnimator: UIViewControllerAnimatedTransitioning {
      Performs the appropriate animation based on the transition style
      */
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        switch transitionStyle {
-        case .presentation:
-            animatePresentation(transitionContext: transitionContext)
-        case .dismissal:
-            animateDismissal(transitionContext: transitionContext)
-        }
+        let animator = interruptibleAnimator(using: transitionContext)
+            animator.startAnimation()
     }
 
+    public func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+        if let propertyAnimator = propertyAnimator {
+                    return propertyAnimator
+                }
+
+        switch transitionStyle {
+        case .presentation:
+            propertyAnimator = animatePresentation(transitionContext: transitionContext)
+            return propertyAnimator!
+        case .dismissal:
+            propertyAnimator = animateDismissal(transitionContext: transitionContext)
+            return propertyAnimator!
+        }
+    }
 }
 #endif
