@@ -106,10 +106,10 @@ class UserGroupViewController: UITableViewController, PanModalPresentable {
         return false
     }
 
-    func shouldPrioritize(panModalGestureRecognizer: UIPanGestureRecognizer) -> Bool {
-        let location = panModalGestureRecognizer.location(in: view)
-        return headerView.frame.contains(location)
-    }
+//    func shouldPrioritize(panModalGestureRecognizer: UIPanGestureRecognizer) -> Bool {
+//        let location = panModalGestureRecognizer.location(in: view)
+//        return headerView.frame.contains(location)
+//    }
 
     func willTransition(to state: PanModalPresentationController.PresentationState) {
         guard isShortFormEnabled, case .longForm = state

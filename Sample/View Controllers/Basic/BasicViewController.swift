@@ -30,6 +30,10 @@ extension BasicViewController: PanModalPresentable {
         return .maxHeightWithTopInset(200)
     }
 
+    var shortFormHeight: PanModalHeight {
+        .contentHeight(300)
+    }
+
     var anchorModalToLongForm: Bool {
         return false
     }

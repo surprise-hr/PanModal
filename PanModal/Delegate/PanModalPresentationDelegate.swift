@@ -34,14 +34,14 @@ extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
      Returns a modal presentation animator configured for the presenting state
      */
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PanModalPresentationAnimator(transitionStyle: .presentation)
+        return PresentAnimation()
     }
 
     /**
      Returns a modal presentation animator configured for the dismissing state
      */
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PanModalPresentationAnimator(transitionStyle: .dismissal)
+        return DismissAnimation()
     }
 
     /**

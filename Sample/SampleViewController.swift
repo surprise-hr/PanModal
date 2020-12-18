@@ -15,6 +15,9 @@ class SampleViewController: UITableViewController {
         setupView()
     }
 
+
+    private var delegate = PanModalPresentationDelegate()
+
     private func setupView() {
         title = "PanModal"
 
@@ -53,7 +56,12 @@ class SampleViewController: UITableViewController {
         guard let rowType = RowType(rawValue: indexPath.row) else {
             return
         }
-        dismiss(animated: true, completion: nil)
+        //dismiss(animated: true, completion: nil)
+        //        let vc = rowType.presentable.rowVC
+        //        vc.modalPresentationStyle = .custom
+        //        vc.transitioningDelegate = delegate
+        //
+        //        present(vc, animated: true)
         presentPanModal(rowType.presentable.rowVC)
     }
 }

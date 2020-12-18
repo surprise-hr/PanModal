@@ -126,6 +126,28 @@ final class PanModalDriver: UIPercentDrivenInteractiveTransition {
     var isRunning: Bool {
         return percentComplete != 0
     }
+
+    override func finish() {
+        super.finish()
+        print("finish")
+    }
+
+    override func update(_ percentComplete: CGFloat) {
+        super.update(percentComplete)
+
+        print("perrcentComplete", self.percentComplete)
+    }
+
+    override func cancel() {
+        super.cancel()
+
+        print("cancel")
+    }
+
+    override func pause() {
+        super.pause()
+        print("pause")
+    }
 }
 
 // MARK: - Internal methods
@@ -159,14 +181,12 @@ extension PanModalDriver {
     }
 
     func snap(toYPosition yPos: CGFloat) {
-        let animator = PanModalAnimator.animate({ [weak self] in
+        PanModalAnimator.animate({ [weak self] in
             self?.adjust(toYPosition: yPos)
             self?.isPresentedViewAnimating = true
         }, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
         }
-
-        animator.startAnimation()
     }
 
     /**
@@ -458,7 +478,10 @@ private extension PanModalDriver {
      Sets the y position of the presentedView & adjusts the backgroundView.
      */
     func adjust(toYPosition yPos: CGFloat) {
-        update(percentComplete + max(yPos/maxTranslation, anchoredYPosition/maxTranslation))
+        print(maxTranslation)
+        print(yPos/maxTranslation)
+        print(percentComplete + yPos/maxTranslation)
+        update(percentComplete + yPos/maxTranslation)
 
         //presentedView.frame.origin.y = max(yPos, anchoredYPosition)
 
