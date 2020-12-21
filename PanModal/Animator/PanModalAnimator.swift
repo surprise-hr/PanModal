@@ -7,10 +7,10 @@
 #if os(iOS)
 import UIKit
 
-struct PanModalAnimator {
+public struct PanModalAnimator {
 
-    enum Defaults {
-        static let defaultTransitionDuration: TimeInterval = 0.5
+    public enum Defaults {
+        static let defaultTransitionDuration: TimeInterval = 0.25
     }
 
     static func animate(_ animations: @escaping PanModalPresentable.AnimationBlockType,
@@ -18,7 +18,6 @@ struct PanModalAnimator {
                         config: PanModalPresentable?,
                         _ completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
-        let transitionDuration = config?.transitionDuration ?? Defaults.defaultTransitionDuration
         let animationOptions = config?.transitionAnimationOptions ?? []
 
         let animation = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animationDuration,
