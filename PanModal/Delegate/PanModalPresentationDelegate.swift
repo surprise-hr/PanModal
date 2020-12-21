@@ -27,6 +27,8 @@ public class PanModalPresentationDelegate: NSObject {
         return PanModalPresentationDelegate()
     }()
 
+    var duration = 0.5
+
 }
 
 extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
@@ -35,14 +37,14 @@ extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
      Returns a modal presentation animator configured for the presenting state
      */
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PanModalPresentationAnimator(transitionStyle: .presentation)
+        return PanModalPresentationAnimator(transitionStyle: .presentation, duration: duration)
     }
 
     /**
      Returns a modal presentation animator configured for the dismissing state
      */
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PanModalPresentationAnimator(transitionStyle: .dismissal)
+        return PanModalPresentationAnimator(transitionStyle: .dismissal, duration: duration)
     }
 
     /**
@@ -53,6 +55,11 @@ extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
      */
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let controller = PanModalPresentationController(presentedViewController: presented, presenting: presenting)
+        duration = controller.presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration
+
+        controller.didChangeDuration = {
+            self.duration = $0
+        }
         controller.delegate = self
         return controller
     }

@@ -44,6 +44,7 @@ open class PanModalPresentationController: UIPresentationController {
 
     // MARK: - Properties
 
+    var didChangeDuration: ((Double) -> ())?
     /**
      A flag to track if the presented view is animating
      */
@@ -95,7 +96,7 @@ open class PanModalPresentationController: UIPresentationController {
     /**
      Configuration object for PanModalPresentationController
      */
-    private var presentable: PanModalPresentable? {
+    var presentable: PanModalPresentable? {
         return presentedViewController as? PanModalPresentable
     }
 
@@ -516,6 +517,9 @@ private extension PanModalPresentationController {
                             && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
+                    let points = presentedView.frame.height
+                    let duration = min(presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, Double(points / velocity.y))
+                    didChangeDuration?(duration)
                     presentedViewController.dismiss(animated: true)
                 }
 
@@ -533,6 +537,9 @@ private extension PanModalPresentationController {
                 } else if position == shortFormYPosition || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
+                    let points = presentedView.frame.height
+                    let duration = min(presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, Double(points / velocity.y))
+                    didChangeDuration?(duration)
                     presentedViewController.dismiss(animated: true)
                 }
             }
@@ -638,7 +645,7 @@ private extension PanModalPresentationController {
         PanModalAnimator.animate({ [weak self] in
             self?.adjust(toYPosition: yPos)
             self?.isPresentedViewAnimating = true
-        }, config: presentable) { [weak self] position in
+        }, animationDuration: 0.5, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
         }
     }

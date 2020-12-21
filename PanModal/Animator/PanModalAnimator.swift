@@ -14,13 +14,14 @@ struct PanModalAnimator {
     }
 
     static func animate(_ animations: @escaping PanModalPresentable.AnimationBlockType,
+                        animationDuration: Double,
                         config: PanModalPresentable?,
                         _ completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
         let transitionDuration = config?.transitionDuration ?? Defaults.defaultTransitionDuration
         let animationOptions = config?.transitionAnimationOptions ?? []
 
-        let animation = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: transitionDuration / 2,
+        let animation = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animationDuration,
                                                                        delay: 0,
                                                                        options: animationOptions,
                                                                        animations: animations,
