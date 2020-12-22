@@ -326,6 +326,16 @@ private extension PanModalPresentationController {
         return false
     }
 
+    var isPresentedViewScrollAnchored: Bool {
+        if !isPresentedViewAnimating
+            && extendsPanScrolling
+            && presentedView.frame.minY.rounded() <= longFormYPosition.rounded() {
+            return true
+        }
+
+        return false
+    }
+
     /**
      Adds the presented view to the given container view
      & configures the view elements such as drag indicator, rounded corners
@@ -468,7 +478,6 @@ private extension PanModalPresentationController {
      The designated function for handling pan gesture events
      */
     @objc func didPanOnPresentedView(_ recognizer: UIPanGestureRecognizer) {
-
         guard
             shouldRespond(to: recognizer),
             let containerView = containerView
@@ -613,10 +622,14 @@ private extension PanModalPresentationController {
             return false
         }
 
+        let isViewAnchored = presentable?.panScrollable?.isScrolling ?? false ? isPresentedViewScrollAnchored : isPresentedViewAnchored
+
         guard
-            isPresentedViewAnchored,
+            isViewAnchored,
             let scrollView = presentable?.panScrollable,
-            scrollView.contentOffset.y > 0
+            (scrollView.contentOffset.y >= 0 && panGestureRecognizer.direction == .bottomToTop)
+                || (scrollView.contentOffset.y <= 0 && panGestureRecognizer.direction == .bottomToTop)
+                || (scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom)
         else {
             return false
         }
@@ -645,7 +658,7 @@ private extension PanModalPresentationController {
         PanModalAnimator.animate({ [weak self] in
             self?.adjust(toYPosition: yPos)
             self?.isPresentedViewAnimating = true
-        }, animationDuration: 0.5, config: presentable) { [weak self] position in
+        }, animationDuration: presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
         }
     }
@@ -722,7 +735,7 @@ private extension PanModalPresentationController {
             !presentedViewController.isBeingPresented
         else { return }
 
-        if !isPresentedViewAnchored && scrollView.contentOffset.y > 0 {
+        if !isPresentedViewScrollAnchored && scrollView.contentOffset.y > 0 {
 
             /**
              Hold the scrollView in place if we're actively scrolling and not handling top bounce
@@ -731,7 +744,7 @@ private extension PanModalPresentationController {
 
         } else if scrollView.isScrolling || isPresentedViewAnimating {
 
-            if isPresentedViewAnchored {
+            if isPresentedViewScrollAnchored {
                 /**
                  While we're scrolling upwards on the scrollView,
                  store the last content offset position
@@ -889,6 +902,38 @@ private extension UIScrollView {
      */
     var isScrolling: Bool {
         return isDragging && !isDecelerating || isTracking
+    }
+}
+
+enum UIPanGestureRecognizerDirection {
+    case undefined
+    case bottomToTop
+    case topToBottom
+    case rightToLeft
+    case leftToRight
+}
+
+extension UIPanGestureRecognizer {
+
+    var velocity: CGPoint {
+        self.velocity(in: view)
+    }
+
+    var isVertical: Bool {
+        return abs(velocity.y) > abs(velocity.x)
+    }
+
+    var direction: UIPanGestureRecognizerDirection {
+
+        var direction: UIPanGestureRecognizerDirection
+
+        if isVertical {
+            direction = velocity.y > 0 ? .topToBottom : .bottomToTop
+        } else {
+            direction = velocity.x > 0 ? .leftToRight : .rightToLeft
+        }
+
+        return direction
     }
 }
 #endif

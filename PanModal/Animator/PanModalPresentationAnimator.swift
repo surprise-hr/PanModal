@@ -50,8 +50,7 @@ public class PanModalPresentationAnimator: NSObject {
 
     required public init(transitionStyle: TransitionStyle, duration: Double) {
         self.transitionStyle = transitionStyle
-
-        print(duration)
+        
         self.duration = duration
         super.init()
 
