@@ -100,6 +100,7 @@ open class PanModalPresentationController: UIPresentationController {
         return presentedViewController as? PanModalPresentable
     }
 
+    var currentY: CGFloat = .zero
     // MARK: - Views
 
     /**
@@ -181,6 +182,8 @@ open class PanModalPresentationController: UIPresentationController {
         layoutBackgroundView(in: containerView)
         layoutPresentedView(in: containerView)
         configureScrollViewInsets()
+
+        presentable?.panScrollable?.delegate = self
 
         guard let coordinator = presentedViewController.transitionCoordinator else {
             backgroundView.dimState = .max
@@ -669,6 +672,7 @@ private extension PanModalPresentationController {
      Sets the y position of the presentedView & adjusts the backgroundView.
      */
     func adjust(toYPosition yPos: CGFloat) {
+        print("yPos", yPos)
         presentedView.frame.origin.y = max(yPos, presentable?.panScrollable?.isScrolling ?? false ? longFormYPosition : anchoredYPosition)
 
         guard presentedView.frame.origin.y > shortFormYPosition else {
@@ -895,6 +899,21 @@ private extension PanModalPresentationController {
     }
 }
 
+extension PanModalPresentationController: UIScrollViewDelegate {
+
+
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        if scrollView.isBouncingTop {
+            adjust(toYPosition: currentY + (-scrollView.contentOffset.y))
+        } else if scrollView.isBouncingBottom {
+            adjust(toYPosition: currentY + (-scrollView.contentOffset.y))
+        } else {
+            currentY = presentedView.frame.origin.y
+        }
+    }
+}
+
 // MARK: - Helper Extensions
 
 private extension UIScrollView {
@@ -904,6 +923,32 @@ private extension UIScrollView {
      */
     var isScrolling: Bool {
         return isDragging && !isDecelerating || isTracking
+    }
+
+    var isBouncing: Bool {
+        return isBouncingTop || isBouncingBottom
+    }
+
+    var isBouncingTop: Bool {
+        return contentOffset.y < topInsetForBouncing - contentInset.top
+    }
+
+    var isBouncingBottom: Bool {
+        let threshold: CGFloat
+        if contentSize.height > frame.size.height {
+            threshold = (contentSize.height - frame.size.height + contentInset.bottom + bottomInsetForBouncing)
+        } else {
+            threshold = topInsetForBouncing
+        }
+        return contentOffset.y > threshold
+    }
+
+    private var topInsetForBouncing: CGFloat {
+        return safeAreaInsets.top != 0.0 ? -safeAreaInsets.top : 0.0
+    }
+
+    private var bottomInsetForBouncing: CGFloat {
+        return safeAreaInsets.bottom
     }
 }
 
