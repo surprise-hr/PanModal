@@ -19,31 +19,35 @@ class FullScreenNavController: UINavigationController {
 extension FullScreenNavController: PanModalPresentable {
 
     var panScrollable: UIScrollView? {
-        return nil
+        nil
     }
 
     var topOffset: CGFloat {
-        return 0.0
+        0.0
     }
 
     var springDamping: CGFloat {
-        return 1.0
+        0.8
+    }
+
+    var springDampingFullScreen: CGFloat {
+        1.0
     }
 
     var transitionDuration: Double {
-        return 0.4
+        0.4
     }
 
     var transitionAnimationOptions: UIView.AnimationOptions {
-        return [.allowUserInteraction, .beginFromCurrentState]
+        [.allowUserInteraction, .beginFromCurrentState]
     }
 
     var shouldRoundTopCorners: Bool {
-        return false
+        false
     }
 
     var showDragIndicator: Bool {
-        return false
+        false
     }
 }
 

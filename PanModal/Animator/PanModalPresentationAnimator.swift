@@ -95,7 +95,7 @@ public class PanModalPresentationAnimator: NSObject {
 
         PanModalAnimator.animate({
             panView.frame.origin.y = yPos
-        }, animationDuration: duration,
+        }, animationDuration: duration, isDamping: yPos != 0,
         config: presentable) { [weak self] position in
             // Calls viewDidAppear and viewDidDisappear
             if position == .end {
@@ -126,6 +126,7 @@ public class PanModalPresentationAnimator: NSObject {
             panView.frame.origin.y = transitionContext.containerView.frame.height
 
         }, animationDuration: duration,
+           isDamping: true,
         config: presentable) { position in
             if position == .end {
             fromVC.view.removeFromSuperview()

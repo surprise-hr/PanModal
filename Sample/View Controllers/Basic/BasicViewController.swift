@@ -52,7 +52,7 @@ extension PanModalPresentable where Self: UIViewController {
     var longFormHeight: PanModalHeight {
 
         guard let scrollView = panScrollable
-            else { return .maxHeight }
+        else { return .maxHeight }
 
         scrollView.layoutIfNeeded()
         return .contentHeight(scrollView.contentSize.height)
@@ -63,7 +63,11 @@ extension PanModalPresentable where Self: UIViewController {
     }
 
     var springDamping: CGFloat {
-        0.9
+        0.8
+    }
+
+    var springDampingFullScreen: CGFloat {
+        1.0
     }
 
     var transitionDuration: Double {
@@ -71,7 +75,7 @@ extension PanModalPresentable where Self: UIViewController {
     }
 
     var transitionAnimationOptions: UIView.AnimationOptions {
-       [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]
+        [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]
     }
 
     var panModalBackgroundColor: UIColor {
@@ -94,7 +98,7 @@ extension PanModalPresentable where Self: UIViewController {
     var allowsExtendedPanScrolling: Bool {
 
         guard panScrollable != nil
-            else { return false }
+        else { return false }
 
         return true
     }

@@ -659,7 +659,8 @@ private extension PanModalPresentationController {
         PanModalAnimator.animate({ [weak self] in
             self?.adjust(toYPosition: yPos)
             self?.isPresentedViewAnimating = true
-        }, animationDuration: presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, config: presentable) { [weak self] position in
+        }, animationDuration: presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration,
+        isDamping: true, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
         }
     }

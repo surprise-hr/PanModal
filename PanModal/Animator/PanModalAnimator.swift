@@ -10,21 +10,27 @@ import UIKit
 public struct PanModalAnimator {
 
     public enum Defaults {
-        static let defaultTransitionDuration: TimeInterval = 0.25
+        static let defaultTransitionDuration: TimeInterval = 0.3
+        static let defaultSpringValue: CGFloat = 1.0
     }
 
     static func animate(_ animations: @escaping PanModalPresentable.AnimationBlockType,
                         animationDuration: Double,
+                        isDamping: Bool,
                         config: PanModalPresentable?,
                         _ completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
-        let animationOptions = config?.transitionAnimationOptions ?? []
+        let springValue = isDamping ? (config?.springDamping ?? Defaults.defaultSpringValue) : (config?.springDampingFullScreen ?? Defaults.defaultSpringValue)
 
-        let animation = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animationDuration,
-                                                                       delay: 0,
-                                                                       options: animationOptions,
-                                                                       animations: animations,
-                                                                       completion: completion)
+        let springTimingParameters: UITimingCurveProvider = UISpringTimingParameters(dampingRatio: springValue, initialVelocity: CGVector(dx: 0.0, dy: 1.0))
+        let animation = UIViewPropertyAnimator(duration: animationDuration, timingParameters: springTimingParameters)
+
+
+        animation.addAnimations(animations)
+        if let completion = completion {
+            animation.addCompletion(completion)
+        }
+        
         animation.startAnimation()
     }
 }
