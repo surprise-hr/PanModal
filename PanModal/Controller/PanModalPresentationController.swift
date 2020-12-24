@@ -495,13 +495,14 @@ private extension PanModalPresentationController {
              Respond accordingly to pan gesture translation
              */
             respond(to: recognizer)
-
             /**
              If presentedView is translated above the longForm threshold, treat as transition
              */
             if presentedView.frame.origin.y == anchoredYPosition && extendsPanScrolling {
                 presentable?.willTransition(to: .longForm)
             }
+
+
 
         default:
 
@@ -623,18 +624,18 @@ private extension PanModalPresentationController {
         }
 
         let isViewAnchored = presentable?.panScrollable?.isScrolling ?? false ? isPresentedViewScrollAnchored : isPresentedViewAnchored
+        let loc = panGestureRecognizer.location(in: presentedView)
 
-        guard
-            isViewAnchored,
-            let scrollView = presentable?.panScrollable,
-            (scrollView.contentOffset.y >= 0 && panGestureRecognizer.direction == .bottomToTop)
-                || (scrollView.contentOffset.y <= 0 && panGestureRecognizer.direction == .bottomToTop)
-                || (scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom)
+        guard let scrollView = presentable?.panScrollable,
+              (isViewAnchored || panGestureRecognizer.direction == .topToBottom),
+              ((panGestureRecognizer.direction == .bottomToTop)
+                || (scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom))
+                || !panGestureRecognizer.isVertical
         else {
+            print(panGestureRecognizer.direction)
             return false
         }
 
-        let loc = panGestureRecognizer.location(in: presentedView)
         return (scrollView.frame.contains(loc) || scrollView.isScrolling)
     }
 
@@ -667,7 +668,7 @@ private extension PanModalPresentationController {
      Sets the y position of the presentedView & adjusts the backgroundView.
      */
     func adjust(toYPosition yPos: CGFloat) {
-        presentedView.frame.origin.y = max(yPos, anchoredYPosition)
+        presentedView.frame.origin.y = max(yPos, presentable?.panScrollable?.isScrolling ?? false ? longFormYPosition : anchoredYPosition)
 
         guard presentedView.frame.origin.y > shortFormYPosition else {
             backgroundView.dimState = .max
