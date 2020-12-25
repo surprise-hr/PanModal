@@ -632,11 +632,12 @@ private extension PanModalPresentationController {
                 || (scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom))
                 || !panGestureRecognizer.isVertical
         else {
-            print(panGestureRecognizer.direction)
+            if (presentable?.panScrollable?.isDecelerating ?? false) {
+                return true
+            }
             return false
         }
-
-        return (scrollView.frame.contains(loc) || scrollView.isScrolling)
+        return (scrollView.isScrolling)
     }
 
     /**
