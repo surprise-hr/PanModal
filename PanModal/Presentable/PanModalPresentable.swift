@@ -71,6 +71,14 @@ public protocol PanModalPresentable: AnyObject {
     var springDamping: CGFloat { get }
 
     /**
+     The springDamping value used to determine the amount of 'bounce'
+     seen when transitioning to short/long form. Used when min y == 0.
+
+     Default Value is 1.0.
+     */
+    var springDampingFullScreen: CGFloat { get }
+
+    /**
      The transitionDuration value is used to set the speed of animation during a transition,
      including initial presentation.
 

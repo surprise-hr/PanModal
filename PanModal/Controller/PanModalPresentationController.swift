@@ -44,6 +44,7 @@ open class PanModalPresentationController: UIPresentationController {
 
     // MARK: - Properties
 
+    var didChangeDuration: ((Double) -> ())?
     /**
      A flag to track if the presented view is animating
      */
@@ -95,7 +96,7 @@ open class PanModalPresentationController: UIPresentationController {
     /**
      Configuration object for PanModalPresentationController
      */
-    private var presentable: PanModalPresentable? {
+    var presentable: PanModalPresentable? {
         return presentedViewController as? PanModalPresentable
     }
 
@@ -325,6 +326,16 @@ private extension PanModalPresentationController {
         return false
     }
 
+    var isPresentedViewScrollAnchored: Bool {
+        if !isPresentedViewAnimating
+            && extendsPanScrolling
+            && presentedView.frame.minY.rounded() <= longFormYPosition.rounded() {
+            return true
+        }
+
+        return false
+    }
+
     /**
      Adds the presented view to the given container view
      & configures the view elements such as drag indicator, rounded corners
@@ -467,7 +478,6 @@ private extension PanModalPresentationController {
      The designated function for handling pan gesture events
      */
     @objc func didPanOnPresentedView(_ recognizer: UIPanGestureRecognizer) {
-
         guard
             shouldRespond(to: recognizer),
             let containerView = containerView
@@ -485,13 +495,14 @@ private extension PanModalPresentationController {
              Respond accordingly to pan gesture translation
              */
             respond(to: recognizer)
-
             /**
              If presentedView is translated above the longForm threshold, treat as transition
              */
             if presentedView.frame.origin.y == anchoredYPosition && extendsPanScrolling {
                 presentable?.willTransition(to: .longForm)
             }
+
+
 
         default:
 
@@ -516,6 +527,9 @@ private extension PanModalPresentationController {
                             && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
+                    let points = presentedView.frame.height
+                    let duration = min(presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, Double(points / velocity.y))
+                    didChangeDuration?(duration)
                     presentedViewController.dismiss(animated: true)
                 }
 
@@ -533,6 +547,9 @@ private extension PanModalPresentationController {
                 } else if position == shortFormYPosition || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
+                    let points = presentedView.frame.height
+                    let duration = min(presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, Double(points / velocity.y))
+                    didChangeDuration?(duration)
                     presentedViewController.dismiss(animated: true)
                 }
             }
@@ -606,16 +623,21 @@ private extension PanModalPresentationController {
             return false
         }
 
-        guard
-            isPresentedViewAnchored,
-            let scrollView = presentable?.panScrollable,
-            scrollView.contentOffset.y > 0
+        let isViewAnchored = presentable?.panScrollable?.isScrolling ?? false ? isPresentedViewScrollAnchored : isPresentedViewAnchored
+        let loc = panGestureRecognizer.location(in: presentedView)
+
+        guard let scrollView = presentable?.panScrollable,
+              (isViewAnchored || panGestureRecognizer.direction == .topToBottom),
+              ((panGestureRecognizer.direction == .bottomToTop)
+                || (scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom))
+                || !panGestureRecognizer.isVertical
         else {
+            if (presentable?.panScrollable?.isDecelerating ?? false) {
+                return true
+            }
             return false
         }
-
-        let loc = panGestureRecognizer.location(in: presentedView)
-        return (scrollView.frame.contains(loc) || scrollView.isScrolling)
+        return (scrollView.isScrolling)
     }
 
     /**
@@ -638,7 +660,8 @@ private extension PanModalPresentationController {
         PanModalAnimator.animate({ [weak self] in
             self?.adjust(toYPosition: yPos)
             self?.isPresentedViewAnimating = true
-        }, config: presentable) { [weak self] position in
+        }, animationDuration: presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration,
+        isDamping: true, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
         }
     }
@@ -647,7 +670,7 @@ private extension PanModalPresentationController {
      Sets the y position of the presentedView & adjusts the backgroundView.
      */
     func adjust(toYPosition yPos: CGFloat) {
-        presentedView.frame.origin.y = max(yPos, anchoredYPosition)
+        presentedView.frame.origin.y = max(yPos, presentable?.panScrollable?.isScrolling ?? false ? longFormYPosition : anchoredYPosition)
 
         guard presentedView.frame.origin.y > shortFormYPosition else {
             backgroundView.dimState = .max
@@ -715,7 +738,7 @@ private extension PanModalPresentationController {
             !presentedViewController.isBeingPresented
         else { return }
 
-        if !isPresentedViewAnchored && scrollView.contentOffset.y > 0 {
+        if !isPresentedViewScrollAnchored && scrollView.contentOffset.y > 0 {
 
             /**
              Hold the scrollView in place if we're actively scrolling and not handling top bounce
@@ -724,7 +747,7 @@ private extension PanModalPresentationController {
 
         } else if scrollView.isScrolling || isPresentedViewAnimating {
 
-            if isPresentedViewAnchored {
+            if isPresentedViewScrollAnchored {
                 /**
                  While we're scrolling upwards on the scrollView,
                  store the last content offset position
@@ -882,6 +905,38 @@ private extension UIScrollView {
      */
     var isScrolling: Bool {
         return isDragging && !isDecelerating || isTracking
+    }
+}
+
+enum UIPanGestureRecognizerDirection {
+    case undefined
+    case bottomToTop
+    case topToBottom
+    case rightToLeft
+    case leftToRight
+}
+
+extension UIPanGestureRecognizer {
+
+    var velocity: CGPoint {
+        self.velocity(in: view)
+    }
+
+    var isVertical: Bool {
+        return abs(velocity.y) > abs(velocity.x)
+    }
+
+    var direction: UIPanGestureRecognizerDirection {
+
+        var direction: UIPanGestureRecognizerDirection
+
+        if isVertical {
+            direction = velocity.y > 0 ? .topToBottom : .bottomToTop
+        } else {
+            direction = velocity.x > 0 ? .leftToRight : .rightToLeft
+        }
+
+        return direction
     }
 }
 #endif

@@ -16,7 +16,6 @@
 		0F2A2C612239C140003BDB2F /* PanModalPresentationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94795C9A21F0335D008045A0 /* PanModalPresentationDelegate.swift */; };
 		0F2A2C622239C148003BDB2F /* PanModalHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C072A4220BA76D00124CE1 /* PanModalHeight.swift */; };
 		0F2A2C632239C14B003BDB2F /* PanModalPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC139068216D9458007A3E64 /* PanModalPresentable.swift */; };
-		0F2A2C642239C14E003BDB2F /* PanModalPresentable+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0EE7B21917F2500208DBC /* PanModalPresentable+Defaults.swift */; };
 		0F2A2C652239C151003BDB2F /* PanModalPresentable+UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC139069216D9458007A3E64 /* PanModalPresentable+UIViewController.swift */; };
 		0F2A2C662239C153003BDB2F /* PanModalPresentable+LayoutHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C072A6220BA78800124CE1 /* PanModalPresentable+LayoutHelpers.swift */; };
 		0F2A2C672239C157003BDB2F /* PanModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC13906A216D9458007A3E64 /* PanModalPresenter.swift */; };
@@ -55,7 +54,6 @@
 		DC3B2EBA222A560A000C8A4A /* TransientAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3B2EB9222A560A000C8A4A /* TransientAlertViewController.swift */; };
 		DC3B2EBE222A58C9000C8A4A /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3B2EBD222A58C9000C8A4A /* AlertView.swift */; };
 		DCA741AE216D90410021F2F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA741AD216D90410021F2F2 /* AppDelegate.swift */; };
-		DCC0EE7C21917F2500208DBC /* PanModalPresentable+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0EE7B21917F2500208DBC /* PanModalPresentable+Defaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,7 +127,6 @@
 		DCA741AA216D90410021F2F2 /* PanModalDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PanModalDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCA741AD216D90410021F2F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DCA741B9216D90420021F2F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DCC0EE7B21917F2500208DBC /* PanModalPresentable+Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PanModalPresentable+Defaults.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -301,7 +298,6 @@
 			children = (
 				74C072A4220BA76D00124CE1 /* PanModalHeight.swift */,
 				DC139068216D9458007A3E64 /* PanModalPresentable.swift */,
-				DCC0EE7B21917F2500208DBC /* PanModalPresentable+Defaults.swift */,
 				DC139069216D9458007A3E64 /* PanModalPresentable+UIViewController.swift */,
 				74C072A6220BA78800124CE1 /* PanModalPresentable+LayoutHelpers.swift */,
 			);
@@ -537,7 +533,6 @@
 				0F2A2C612239C140003BDB2F /* PanModalPresentationDelegate.swift in Sources */,
 				0F2A2C622239C148003BDB2F /* PanModalHeight.swift in Sources */,
 				0F2A2C632239C14B003BDB2F /* PanModalPresentable.swift in Sources */,
-				0F2A2C642239C14E003BDB2F /* PanModalPresentable+Defaults.swift in Sources */,
 				0F2A2C652239C151003BDB2F /* PanModalPresentable+UIViewController.swift in Sources */,
 				0F2A2C662239C153003BDB2F /* PanModalPresentable+LayoutHelpers.swift in Sources */,
 				0F2A2C672239C157003BDB2F /* PanModalPresenter.swift in Sources */,
@@ -580,7 +575,6 @@
 				DC139071216D9458007A3E64 /* PanModalPresentable.swift in Sources */,
 				DC139061216D93ED007A3E64 /* SampleViewController.swift in Sources */,
 				743CABB02225FC9F00634A5A /* UserGroupViewController.swift in Sources */,
-				DCC0EE7C21917F2500208DBC /* PanModalPresentable+Defaults.swift in Sources */,
 				94795C9D21F03368008045A0 /* PanContainerView.swift in Sources */,
 				74C072A7220BA78800124CE1 /* PanModalPresentable+LayoutHelpers.swift in Sources */,
 				DC139075216D9458007A3E64 /* DimmedView.swift in Sources */,
@@ -620,7 +614,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PanModal/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -649,7 +643,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PanModal/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -756,7 +750,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -812,7 +806,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -832,7 +826,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z5BLV4HGTS;
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -853,7 +847,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z5BLV4HGTS;
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

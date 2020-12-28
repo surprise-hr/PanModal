@@ -44,10 +44,14 @@ public class PanModalPresentationAnimator: NSObject {
      */
     private var feedbackGenerator: UISelectionFeedbackGenerator?
 
+    var duration: Double
+
     // MARK: - Initializers
 
-    required public init(transitionStyle: TransitionStyle) {
+    required public init(transitionStyle: TransitionStyle, duration: Double) {
         self.transitionStyle = transitionStyle
+        
+        self.duration = duration
         super.init()
 
         /**
@@ -91,7 +95,8 @@ public class PanModalPresentationAnimator: NSObject {
 
         PanModalAnimator.animate({
             panView.frame.origin.y = yPos
-        }, config: presentable) { [weak self] position in
+        }, animationDuration: duration, isDamping: yPos != 0,
+        config: presentable) { [weak self] position in
             // Calls viewDidAppear and viewDidDisappear
             if position == .end {
             fromVC.endAppearanceTransition()
@@ -120,7 +125,9 @@ public class PanModalPresentationAnimator: NSObject {
         PanModalAnimator.animate({
             panView.frame.origin.y = transitionContext.containerView.frame.height
 
-        }, config: presentable) { position in
+        }, animationDuration: duration,
+           isDamping: true,
+        config: presentable) { position in
             if position == .end {
             fromVC.view.removeFromSuperview()
             // Calls viewDidAppear and viewDidDisappear

@@ -13,7 +13,7 @@ import UIKit
  Helper extensions that handle layout in the PanModalPresentationController
  */
 extension PanModalPresentable where Self: UIViewController {
-
+    
     /**
      Cast the presentation controller to PanModalPresentationController
      so we can access PanModalPresentationController properties and methods
@@ -21,34 +21,34 @@ extension PanModalPresentable where Self: UIViewController {
     var presentedVC: PanModalPresentationController? {
         return presentationController as? PanModalPresentationController
     }
-
+    
     /**
      Length of the top layout guide of the presenting view controller.
      Gives us the safe area inset from the top.
      */
-    var topLayoutOffset: CGFloat {
-
+    public var topLayoutOffset: CGFloat {
+        
         guard let rootVC = rootViewController
-            else { return 0}
-
+        else { return 0}
+        
         if #available(iOS 11.0, *) { return rootVC.view.safeAreaInsets.top } else { return rootVC.topLayoutGuide.length }
     }
-
+    
     /**
      Length of the bottom layout guide of the presenting view controller.
      Gives us the safe area inset from the bottom.
      */
-    var bottomLayoutOffset: CGFloat {
-
-       guard let rootVC = rootViewController
-            else { return 0}
-
+    public var bottomLayoutOffset: CGFloat {
+        
+        guard let rootVC = rootViewController
+        else { return 0}
+        
         if #available(iOS 11.0, *) { return rootVC.view.safeAreaInsets.bottom } else { return rootVC.bottomLayoutGuide.length }
     }
-
+    
     /**
      Returns the short form Y position
-
+     
      - Note: If voiceover is on, the `longFormYPos` is returned.
      We do not support short form when voiceover is on as it would make it difficult for user to navigate.
      */
