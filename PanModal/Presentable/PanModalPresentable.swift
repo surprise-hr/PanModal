@@ -19,6 +19,14 @@ import UIKit
  }
  ```
  */
+
+public enum AnimationMode {
+    case normal
+
+    // Ideal bezier is cubic-bezier(.41,.18,.14,1)
+    case cubicBezier(controlPoint1: CGPoint, controlPoint2: CGPoint)
+}
+
 public protocol PanModalPresentable: AnyObject {
 
     /**
@@ -61,6 +69,14 @@ public protocol PanModalPresentable: AnyObject {
      Default Value is 8.0.
      */
     var cornerRadius: CGFloat { get }
+
+    /**
+     The animation mode used to determine the type of animation
+     like normal or custom.
+
+     Default Value is normal.
+     */
+    var animationMode: AnimationMode { get }
 
     /**
      The springDamping value used to determine the amount of 'bounce'
