@@ -624,7 +624,6 @@ private extension PanModalPresentationController {
         }
 
         let isViewAnchored = presentable?.panScrollable?.isScrolling ?? false ? isPresentedViewScrollAnchored : isPresentedViewAnchored
-        //let loc = panGestureRecognizer.location(in: presentedView)
 
         guard let scrollView = presentable?.panScrollable,
               (isViewAnchored || panGestureRecognizer.direction == .topToBottom),
