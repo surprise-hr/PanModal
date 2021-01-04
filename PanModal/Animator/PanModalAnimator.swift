@@ -23,7 +23,7 @@ public struct PanModalAnimator {
         var animation: UIViewPropertyAnimator?
 
         switch config?.animationMode {
-        case .normal:
+        case .normal, .none:
             animation = PanModalAnimator.animateWithNormalMode(animationDuration: animationDuration,
                                                                isDamping: isDamping,
                                                                config: config)
@@ -31,8 +31,6 @@ public struct PanModalAnimator {
             animation = PanModalAnimator.animateWithCubicBezierMode(animationDuration: animationDuration,
                                                         controlPoint1: controlPoint1,
                                                         controlPoint2: controlPoint2)
-        default: break
-
         }
 
         animation?.addAnimations(animations)
@@ -51,9 +49,6 @@ public struct PanModalAnimator {
         let springTimingParameters: UITimingCurveProvider = UISpringTimingParameters(dampingRatio: springValue, initialVelocity: CGVector(dx: 0.0, dy: 1.0))
 
         return UIViewPropertyAnimator(duration: animationDuration, timingParameters: springTimingParameters)
-
-
-
     }
 
     static func animateWithCubicBezierMode(animationDuration: Double, controlPoint1: CGPoint, controlPoint2: CGPoint) -> UIViewPropertyAnimator {
