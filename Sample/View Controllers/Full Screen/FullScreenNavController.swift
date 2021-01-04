@@ -26,6 +26,10 @@ extension FullScreenNavController: PanModalPresentable {
         0.0
     }
 
+    var animationMode: AnimationMode {
+        .cubicBezier(controlPoint1: CGPoint(x: 0.41, y: 0.18), controlPoint2: CGPoint(x: 0.14, y: 1))
+    }
+
     var springDamping: CGFloat {
         0.8
     }
@@ -33,11 +37,7 @@ extension FullScreenNavController: PanModalPresentable {
     var springDampingFullScreen: CGFloat {
         1.0
     }
-
-    var transitionDuration: Double {
-        0.4
-    }
-
+    
     var transitionAnimationOptions: UIView.AnimationOptions {
         [.allowUserInteraction, .beginFromCurrentState]
     }
