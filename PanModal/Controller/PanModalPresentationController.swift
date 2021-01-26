@@ -40,6 +40,8 @@ open class PanModalPresentationController: UIPresentationController {
         static let indicatorYOffset: CGFloat = 10.0
         static let snapMovementSensitivity: CGFloat = 0.7
         static let dragIndicatorSize: CGSize = .init(width: 64.0, height: 4.0)
+        static let nominalVelocity: CGFloat = 1000.0
+        static let modalHeightDeltaPercentage: CGFloat = 0.05
     }
 
     // MARK: - Properties
@@ -99,6 +101,11 @@ open class PanModalPresentationController: UIPresentationController {
     var presentable: PanModalPresentable? {
         return presentedViewController as? PanModalPresentable
     }
+
+    /// The y value of presentable's scrollView.
+    /// It saves before pan changes applying and releases after recogniser's
+    /// gesture ended
+    private var startContentOffset: CGPoint?
 
     // MARK: - Views
 
@@ -490,6 +497,12 @@ private extension PanModalPresentationController {
 
         switch recognizer.state {
         case .began, .changed:
+            /**
+             If startContentOffset is nil save initial position of scrollView
+             */
+            if startContentOffset == nil {
+                startContentOffset = presentable?.panScrollable?.contentOffset
+            }
 
             /**
              Respond accordingly to pan gesture translation
@@ -501,17 +514,21 @@ private extension PanModalPresentationController {
             if presentedView.frame.origin.y == anchoredYPosition && extendsPanScrolling {
                 presentable?.willTransition(to: .longForm)
             }
-
-
-
         default:
+            defer {
+                /**
+                 Release startContentOffset value after pan recognition has ended
+                 */
+                startContentOffset = nil
+            }
 
             /**
              Use velocity sensitivity value to restrict snapping
              */
             let velocity = recognizer.velocity(in: presentedView)
+            let visibleHeight = presentedView.frame.height - presentedView.frame.minY
 
-            if isVelocityWithinSensitivityRange(velocity.y) {
+            if isVelocityWithinSensitivityRange(velocity.y, for: visibleHeight) {
 
                 /**
                  If velocity is within the sensitivity range,
@@ -527,12 +544,11 @@ private extension PanModalPresentationController {
                             && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
                     transition(to: .shortForm)
                 } else {
-                    let points = presentedView.frame.height
-                    let duration = min(presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, Double(points / velocity.y))
+                    let points = presentedView.frame.height - presentedView.frame.minY
+                    let duration = min(presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration, Double(visibleHeight / velocity.y))
                     didChangeDuration?(duration)
                     presentedViewController.dismiss(animated: true)
                 }
-
             } else {
 
                 /**
@@ -651,8 +667,17 @@ private extension PanModalPresentationController {
     /**
      Check if the given velocity is within the sensitivity range
      */
-    func isVelocityWithinSensitivityRange(_ velocity: CGFloat) -> Bool {
-        return (abs(velocity) - (1000 * (1 - Constants.snapMovementSensitivity))) > 0
+    func isVelocityWithinSensitivityRange(_ velocity: CGFloat, for height: CGFloat) -> Bool {
+        if let panScrollable = presentable?.panScrollable,
+           let startContentOffset = startContentOffset,
+           startContentOffset != .zero {
+            return false
+        }
+
+        let initialHeight = presentedView.frame.height - shortFormYPosition
+        let hiddenValue = 1.0 - height / initialHeight
+        return (abs(velocity) - (Constants.nominalVelocity * (1 - Constants.snapMovementSensitivity))) > 0
+            &&  hiddenValue >= Constants.modalHeightDeltaPercentage
     }
 
     func snap(toYPosition yPos: CGFloat) {
