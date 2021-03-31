@@ -44,6 +44,20 @@ public protocol PanModalPresentable: AnyObject {
     var topOffset: CGFloat { get }
 
     /**
+     The offset between the top of the screen and the top of the indicator view.
+
+     Default value is the 10.0.
+     */
+    var indicatorYOffset: CGFloat { get }
+    
+    /**
+     Define a size of the indicator view.
+
+     Default value is the (width: 64.0, height: 4.0)
+     */
+    var dragIndicatorSize: CGSize { get }
+    
+    /**
      The height of the pan modal container view
      when in the shortForm presentation state.
 
