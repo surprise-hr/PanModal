@@ -10,6 +10,14 @@ import UIKit
 
 extension PanModalPresentable where Self: UIViewController {
 
+    var indicatorYOffset: CGFloat {
+        10
+    }
+    
+    var dragIndicatorSize: CGSize {
+        CGSize(width: 64, height: 4)
+    }
+    
     var panScrollable: UIScrollView? {
         nil
     }

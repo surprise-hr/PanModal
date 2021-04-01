@@ -143,7 +143,7 @@ open class PanModalPresentationController: UIPresentationController {
     private lazy var dragIndicatorView: UIView = {
         let view = UIView()
         view.backgroundColor = presentable?.dragIndicatorBackgroundColor
-        view.layer.cornerRadius = Constants.dragIndicatorSize.height / 2.0
+        view.layer.cornerRadius = (presentable?.dragIndicatorSize.height ?? Constants.dragIndicatorSize.height) / 2.0
         return view
     }()
 
@@ -429,10 +429,10 @@ private extension PanModalPresentationController {
     func addDragIndicatorView(to view: UIView) {
         view.addSubview(dragIndicatorView)
         dragIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        dragIndicatorView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: Constants.indicatorYOffset).isActive = true
+        dragIndicatorView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: presentable?.indicatorYOffset ?? Constants.indicatorYOffset).isActive = true
         dragIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        dragIndicatorView.widthAnchor.constraint(equalToConstant: Constants.dragIndicatorSize.width).isActive = true
-        dragIndicatorView.heightAnchor.constraint(equalToConstant: Constants.dragIndicatorSize.height).isActive = true
+        dragIndicatorView.widthAnchor.constraint(equalToConstant: presentable?.dragIndicatorSize.width ?? Constants.dragIndicatorSize.width).isActive = true
+        dragIndicatorView.heightAnchor.constraint(equalToConstant: presentable?.dragIndicatorSize.height ?? Constants.dragIndicatorSize.height).isActive = true
     }
 
     /**
@@ -891,7 +891,7 @@ private extension PanModalPresentationController {
 
         // Draw around the drag indicator view, if displayed
         if presentable?.showDragIndicator == true {
-            let indicatorLeftEdgeXPos = view.bounds.width/2.0 - Constants.dragIndicatorSize.width/2.0
+            let indicatorLeftEdgeXPos = view.bounds.width/2.0 - (presentable?.dragIndicatorSize.width ?? Constants.dragIndicatorSize.width)/2.0
             drawAroundDragIndicator(currentPath: path, indicatorLeftEdgeXPos: indicatorLeftEdgeXPos)
         }
 
@@ -909,8 +909,7 @@ private extension PanModalPresentationController {
      Draws a path around the drag indicator view
      */
     func drawAroundDragIndicator(currentPath path: UIBezierPath, indicatorLeftEdgeXPos: CGFloat) {
-
-        let totalIndicatorOffset = Constants.indicatorYOffset + Constants.dragIndicatorSize.height
+        let totalIndicatorOffset = (presentable?.indicatorYOffset ?? Constants.indicatorYOffset) + (presentable?.dragIndicatorSize.height ?? Constants.dragIndicatorSize.height)
 
         // Draw around drag indicator starting from the left
         path.addLine(to: CGPoint(x: indicatorLeftEdgeXPos, y: path.currentPoint.y))
