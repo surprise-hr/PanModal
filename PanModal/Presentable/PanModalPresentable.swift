@@ -30,6 +30,10 @@ public enum AnimationMode {
 public enum ShouldRoundTopCorners {
     case never
     case always
+
+    /// Will round the corners:
+    /// Always if modal is not full screen;
+    /// Only for iPhone X-type devices if modal is full screen
     case automatic
 
     func shouldRound(topOffset: CGFloat) -> Bool {
