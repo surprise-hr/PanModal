@@ -50,8 +50,8 @@ class AlertViewController: UIViewController, PanModalPresentable {
         return UIColor.black.withAlphaComponent(0.1)
     }
 
-    var shouldRoundTopCorners: Bool {
-        return false
+    var shouldRoundTopCorners: ShouldRoundTopCorners {
+        return .never
     }
 
     var showDragIndicator: Bool {
