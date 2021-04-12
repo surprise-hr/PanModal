@@ -104,12 +104,12 @@ extension PanModalPresentable where Self: UIViewController {
         false
     }
 
-    var shouldRoundTopCorners: Bool {
-        isPanModalPresented
+    var shouldRoundTopCorners: ShouldRoundTopCorners {
+        isPanModalPresented ? .automatic : .never
     }
 
     var showDragIndicator: Bool {
-        shouldRoundTopCorners
+        shouldRoundTopCorners.shouldRound(topOffset: topOffset)
     }
 
     func shouldRespond(to panModalGestureRecognizer: UIPanGestureRecognizer) -> Bool {

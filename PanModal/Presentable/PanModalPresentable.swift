@@ -27,6 +27,34 @@ public enum AnimationMode {
     case cubicBezier(controlPoint1: CGPoint, controlPoint2: CGPoint)
 }
 
+public enum ShouldRoundTopCorners {
+    case never
+    case always
+
+    /// Will round the corners:
+    /// Always if modal is not full screen;
+    /// Only for iPhone X-type devices if modal is full screen
+    case automatic
+
+    public func shouldRound(topOffset: CGFloat) -> Bool {
+        switch self {
+        case .never:
+            return false
+        case .always:
+            return true
+        case .automatic:
+            if topOffset > 0 {
+                // not full screen
+                return true
+            } else {
+                // full screen
+                // round only if device has notch
+                return UIDevice.current.hasNotch
+            }
+        }
+    }
+}
+
 public protocol PanModalPresentable: AnyObject {
 
     /**
@@ -199,9 +227,9 @@ public protocol PanModalPresentable: AnyObject {
     /**
      A flag to determine if the top corners should be rounded.
 
-     Default value is true.
+     Default value is `.automatic`.
      */
-    var shouldRoundTopCorners: Bool { get }
+    var shouldRoundTopCorners: ShouldRoundTopCorners { get }
 
     /**
      A flag to determine if a drag indicator should be shown
@@ -285,4 +313,16 @@ public protocol PanModalPresentable: AnyObject {
      */
     func panModalStopDragging()
 }
+
+extension UIDevice {
+    // https://stackoverflow.com/a/63705090
+    var hasNotch: Bool {
+        if #available(iOS 11.0, *) {
+            let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first
+            return (keyWindow?.safeAreaInsets.bottom ?? 0) > 0
+        }
+        return false
+    }
+}
+
 #endif

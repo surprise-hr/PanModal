@@ -244,7 +244,7 @@ open class PanModalPresentationController: UIPresentationController {
             else { return }
 
             self.adjustPresentedViewFrame()
-            if presentable.shouldRoundTopCorners {
+            if presentable.shouldRoundTopCorners.shouldRound(topOffset: presentable.topOffset) {
                 self.addRoundedCorners(to: self.presentedView)
             }
         })
@@ -369,7 +369,7 @@ private extension PanModalPresentationController {
             addDragIndicatorView(to: presentedView)
         }
 
-        if presentable.shouldRoundTopCorners {
+        if presentable.shouldRoundTopCorners.shouldRound(topOffset: presentable.topOffset) {
             addRoundedCorners(to: presentedView)
         }
 

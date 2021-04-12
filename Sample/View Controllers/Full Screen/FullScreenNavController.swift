@@ -42,8 +42,8 @@ extension FullScreenNavController: PanModalPresentable {
         [.allowUserInteraction, .beginFromCurrentState]
     }
 
-    var shouldRoundTopCorners: Bool {
-        false
+    var shouldRoundTopCorners: ShouldRoundTopCorners {
+        .never
     }
 
     var showDragIndicator: Bool {

@@ -106,8 +106,8 @@ class StackedProfileViewController: UIViewController, PanModalPresentable {
         return false
     }
 
-    var shouldRoundTopCorners: Bool {
-        return true
+    var shouldRoundTopCorners: ShouldRoundTopCorners {
+        return .automatic
     }
 
 }
