@@ -109,7 +109,7 @@ extension PanModalPresentable where Self: UIViewController {
     }
 
     var showDragIndicator: Bool {
-        shouldRoundTopCorners
+        shouldRoundTopCorners.shouldRound(topOffset: topOffset)
     }
 
     func shouldRespond(to panModalGestureRecognizer: UIPanGestureRecognizer) -> Bool {

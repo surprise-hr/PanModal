@@ -36,7 +36,7 @@ public enum ShouldRoundTopCorners {
     /// Only for iPhone X-type devices if modal is full screen
     case automatic
 
-    func shouldRound(topOffset: CGFloat) -> Bool {
+    public func shouldRound(topOffset: CGFloat) -> Bool {
         switch self {
         case .never:
             return false
