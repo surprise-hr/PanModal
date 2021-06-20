@@ -93,10 +93,8 @@ public class PanModalPresentationAnimator: NSObject {
             feedbackGenerator?.selectionChanged()
         }
 
-        toVC.view.alpha = 0.0
         PanModalAnimator.animate({
             panView.frame.origin.y = yPos
-            toVC.view.alpha = 1.0
         }, animationDuration: duration, isDamping: yPos != 0,
         config: presentable) { [weak self] position in
             // Calls viewDidAppear and viewDidDisappear
