@@ -644,7 +644,7 @@ private extension PanModalPresentationController {
         guard let scrollView = presentable?.panScrollable,
               (isViewAnchored || panGestureRecognizer.direction == .topToBottom),
               ((panGestureRecognizer.direction == .bottomToTop)
-                || (scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom))
+               || (presentable?.respectContentInset == true ? (scrollView.contentOffset.y > -scrollView.contentInset.top) : scrollView.contentOffset.y > 0 && panGestureRecognizer.direction == .topToBottom))
                 || !panGestureRecognizer.isVertical
         else {
             if (presentable?.panScrollable?.isDecelerating ?? false) {
@@ -810,7 +810,12 @@ private extension PanModalPresentationController {
      This helps halt scrolling when we want to hold the scroll view in place.
      */
     func trackScrolling(_ scrollView: UIScrollView) {
-        scrollViewYOffset = max(scrollView.contentOffset.y, 0)
+        if presentable?.respectContentInset == true {
+            scrollViewYOffset = min(max(scrollView.contentOffset.y, -scrollView.contentInset.top), 0)
+        } else {
+            scrollViewYOffset = max(scrollView.contentOffset.y, 0)
+        }
+        
         scrollView.showsVerticalScrollIndicator = true
     }
 

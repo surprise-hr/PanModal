@@ -200,6 +200,14 @@ public protocol PanModalPresentable: AnyObject {
      Default value is true.
      */
     var allowsDragToDismiss: Bool { get }
+    
+    
+    /**
+     A flag to determine if dismissal should be initiated when at offset that includes contentInset or not.
+
+     Default value is false.
+     */
+    var respectContentInset: Bool { get }
 
     /**
      A flag to determine if dismissal should be initiated when tapping on the dimmed background view.

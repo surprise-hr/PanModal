@@ -91,6 +91,10 @@ extension PanModalPresentable where Self: UIViewController {
     var allowsDragToDismiss: Bool {
         true
     }
+    
+    var respectContentInset: Bool {
+        false
+    }
 
     var allowsTapToDismiss: Bool {
         true
