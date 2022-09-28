@@ -322,6 +322,10 @@ public protocol PanModalPresentable: AnyObject {
     func panModalStopDragging()
 }
 
+public extension PanModalPresentable {
+    var respectContentInset: Bool { false }
+}
+
 extension UIDevice {
     // https://stackoverflow.com/a/63705090
     var hasNotch: Bool {
