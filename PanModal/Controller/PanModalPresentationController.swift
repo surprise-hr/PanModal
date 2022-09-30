@@ -668,12 +668,13 @@ private extension PanModalPresentationController {
      Check if the given velocity is within the sensitivity range
      */
     func isVelocityWithinSensitivityRange(_ velocity: CGFloat, for height: CGFloat) -> Bool {
-        if let panScrollable = presentable?.panScrollable,
-           let startContentOffset = startContentOffset,
-           startContentOffset != .zero {
+        if  let presentable = presentable,
+            let panScrollable = presentable.panScrollable,
+            let startContentOffset = startContentOffset,
+            startContentOffset.y != (presentable.respectContentInset ? -panScrollable.contentInset.top : 0) {
             return false
         }
-
+        
         let initialHeight = presentedView.frame.height - shortFormYPosition
         let hiddenValue = 1.0 - height / initialHeight
         return (abs(velocity) - (Constants.nominalVelocity * (1 - Constants.snapMovementSensitivity))) > 0
