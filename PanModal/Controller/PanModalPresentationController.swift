@@ -184,6 +184,11 @@ open class PanModalPresentationController: UIPresentationController {
 
         guard let containerView = containerView
         else { return }
+        
+        // Fix bug issue https://github.com/slackhq/PanModal/issues/202
+        if panContainerView.frame == .zero {
+            adjustPresentedViewFrame()
+        }
 
         layoutBackgroundView(in: containerView)
         layoutPresentedView(in: containerView)
