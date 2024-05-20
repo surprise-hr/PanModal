@@ -247,6 +247,9 @@ public protocol PanModalPresentable: AnyObject {
      */
     var showDragIndicator: Bool { get }
 
+    /// Replicates system `UIModalPresentationStyle.fullScreen` behavior when presentation view is removed from views hierarchy on presentation completion
+    var removePresentationViewFromHierarchy: Bool { get }
+
     /**
      Asks the delegate if the pan modal should respond to the pan modal gesture recognizer.
      
@@ -324,6 +327,8 @@ public protocol PanModalPresentable: AnyObject {
 
 public extension PanModalPresentable {
     var respectContentInset: Bool { false }
+
+    var removePresentationViewFromHierarchy: Bool { false }
 }
 
 extension UIDevice {

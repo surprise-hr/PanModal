@@ -96,12 +96,17 @@ public class PanModalPresentationAnimator: NSObject {
         PanModalAnimator.animate({
             panView.frame.origin.y = yPos
         }, animationDuration: duration, isDamping: yPos != 0,
-        config: presentable) { [weak self] position in
+                                 config: presentable) { [weak self] position in
             // Calls viewDidAppear and viewDidDisappear
             if position == .end {
-            fromVC.endAppearanceTransition()
-            transitionContext.completeTransition(true)
-            self?.feedbackGenerator = nil
+
+                if presentable?.removePresentationViewFromHierarchy == true {
+                    fromVC.view.removeFromSuperview()
+                }
+
+                fromVC.endAppearanceTransition()
+                transitionContext.completeTransition(true)
+                self?.feedbackGenerator = nil
             }
         }
     }
@@ -122,17 +127,21 @@ public class PanModalPresentationAnimator: NSObject {
         let presentable = panModalLayoutType(from: transitionContext)
         let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
 
+        if presentable?.removePresentationViewFromHierarchy == true {
+            transitionContext.containerView.superview?.insertSubview(toVC.view, at: 0)
+        }
+
         PanModalAnimator.animate({
             panView.frame.origin.y = transitionContext.containerView.frame.height
 
         }, animationDuration: duration,
-           isDamping: true,
-        config: presentable) { position in
+                                 isDamping: true,
+                                 config: presentable) { position in
             if position == .end {
-            fromVC.view.removeFromSuperview()
-            // Calls viewDidAppear and viewDidDisappear
-            toVC.endAppearanceTransition()
-            transitionContext.completeTransition(true)
+                fromVC.view.removeFromSuperview()
+                // Calls viewDidAppear and viewDidDisappear
+                toVC.endAppearanceTransition()
+                transitionContext.completeTransition(true)
             }
         }
     }

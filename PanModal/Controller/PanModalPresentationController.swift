@@ -498,6 +498,10 @@ private extension PanModalPresentationController {
             return
         }
 
+        if recognizer.state == .began, presentable?.removePresentationViewFromHierarchy == true {
+            containerView.insertSubview(presentingViewController.view, at: 0)
+        }
+
         presentable?.willRespond(to: panGestureRecognizer)
 
         switch recognizer.state {
@@ -693,6 +697,9 @@ private extension PanModalPresentationController {
         }, animationDuration: presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration,
         isDamping: true, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
+            if position == .end, self?.presentable?.removePresentationViewFromHierarchy == true {
+                self?.presentedViewController.presentingViewController?.view.removeFromSuperview()
+            }
         }
     }
 
