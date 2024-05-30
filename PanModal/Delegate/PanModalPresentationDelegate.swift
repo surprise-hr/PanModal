@@ -29,6 +29,7 @@ public class PanModalPresentationDelegate: NSObject {
 
     var duration = 0.5
 
+    private weak var presentationViewSuperview: UIView?
 }
 
 extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
@@ -37,14 +38,26 @@ extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
      Returns a modal presentation animator configured for the presenting state
      */
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PanModalPresentationAnimator(transitionStyle: .presentation, duration: duration)
+        return PanModalPresentationAnimator(
+            transitionStyle: .presentation,
+            duration: duration,
+            presentationViewSuperview: presentationViewSuperview
+        ) { [weak self] view in
+            self?.presentationViewSuperview = view
+        }
     }
 
     /**
      Returns a modal presentation animator configured for the dismissing state
      */
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PanModalPresentationAnimator(transitionStyle: .dismissal, duration: duration)
+        return PanModalPresentationAnimator(
+            transitionStyle: .dismissal,
+            duration: duration,
+            presentationViewSuperview: presentationViewSuperview
+        ) { [weak self] view in
+            self?.presentationViewSuperview = view
+        }
     }
 
     /**
