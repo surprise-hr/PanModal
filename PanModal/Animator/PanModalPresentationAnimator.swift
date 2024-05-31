@@ -45,20 +45,11 @@ public class PanModalPresentationAnimator: NSObject {
     private var feedbackGenerator: UISelectionFeedbackGenerator?
 
     var duration: Double
-    private weak var presentationViewSuperview: UIView?
-    private var storePresentationViewSuperview: ((UIView?) -> Void)
 
     // MARK: - Initializers
 
-    required public init(
-        transitionStyle: TransitionStyle,
-        duration: Double,
-        presentationViewSuperview: UIView?,
-        storePresentationViewSuperview: @escaping ((UIView?) -> Void)
-    ) {
+    required public init(transitionStyle: TransitionStyle, duration: Double) {
         self.transitionStyle = transitionStyle
-        self.presentationViewSuperview = presentationViewSuperview
-        self.storePresentationViewSuperview = storePresentationViewSuperview
         self.duration = duration
         super.init()
 
@@ -109,7 +100,7 @@ public class PanModalPresentationAnimator: NSObject {
             if position == .end {
 
                 if presentable?.removePresentationViewFromHierarchy == true {
-                    self?.storePresentationViewSuperview(fromVC.view.superview)
+                    fromVC.presentationView = fromVC.view.superview
                     fromVC.view.removeFromSuperview()
                 }
 
@@ -137,7 +128,9 @@ public class PanModalPresentationAnimator: NSObject {
         let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
 
         if presentable?.removePresentationViewFromHierarchy == true {
-            presentationViewSuperview?.insertSubview(toVC.view, at: 0)
+            print("~~~ toVC: \(toVC), container: \(toVC.presentationView)")
+            toVC.presentationView?.insertSubview(toVC.view, at: 0)
+            toVC.presentationView = nil
         }
 
         PanModalAnimator.animate({
