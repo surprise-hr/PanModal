@@ -128,7 +128,6 @@ public class PanModalPresentationAnimator: NSObject {
         let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
 
         if presentable?.removePresentationViewFromHierarchy == true {
-            print("~~~ toVC: \(toVC), container: \(toVC.presentationView)")
             toVC.presentationView?.insertSubview(toVC.view, at: 0)
             toVC.presentationView = nil
         }
