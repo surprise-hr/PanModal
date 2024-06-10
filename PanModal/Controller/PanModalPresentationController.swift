@@ -154,6 +154,8 @@ open class PanModalPresentationController: UIPresentationController {
         return panContainerView
     }
 
+    public weak var presentationDelegate: PanModalPresentationControllerDelegate?
+
     // MARK: - Gesture Recognizers
 
     /**
@@ -213,6 +215,7 @@ open class PanModalPresentationController: UIPresentationController {
 
     override public func dismissalTransitionWillBegin() {
         presentable?.panModalWillDismiss()
+        presentationDelegate?.panModalWillDismiss()
 
         guard let coordinator = presentedViewController.transitionCoordinator else {
             backgroundView.dimState = .off
@@ -504,6 +507,10 @@ private extension PanModalPresentationController {
 
         presentable?.willRespond(to: panGestureRecognizer)
 
+        if recognizer.state == .began {
+            presentationDelegate?.panModalWillStartDragging()
+        }
+
         switch recognizer.state {
         case .began, .changed:
             /**
@@ -697,8 +704,11 @@ private extension PanModalPresentationController {
         }, animationDuration: presentable?.transitionDuration ?? PanModalAnimator.Defaults.defaultTransitionDuration,
         isDamping: true, config: presentable) { [weak self] position in
             self?.isPresentedViewAnimating = position != .end
-            if position == .end, self?.presentable?.removePresentationViewFromHierarchy == true {
-                self?.presentedViewController.presentingViewController?.view.removeFromSuperview()
+            if position == .end {
+                self?.presentationDelegate?.panModalDidSnapToTop()
+                if self?.presentable?.removePresentationViewFromHierarchy == true {
+                    self?.presentedViewController.presentingViewController?.view.removeFromSuperview()
+                }
             }
         }
     }

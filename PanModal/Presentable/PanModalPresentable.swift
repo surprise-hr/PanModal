@@ -343,3 +343,10 @@ extension UIDevice {
 }
 
 #endif
+
+public protocol PanModalPresentationControllerDelegate: AnyObject {
+
+    func panModalWillStartDragging()
+    func panModalWillDismiss()
+    func panModalDidSnapToTop()
+}
