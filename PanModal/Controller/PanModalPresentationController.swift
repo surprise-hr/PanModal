@@ -322,6 +322,14 @@ public extension PanModalPresentationController {
         configureScrollViewInsets()
     }
 
+    func disablePanGesture() {
+        panGestureRecognizer.isEnabled = false
+    }
+
+    func enablePanGesture() {
+        panGestureRecognizer.isEnabled = true
+    }
+
 }
 
 // MARK: - Presented View Layout Configuration
@@ -991,3 +999,9 @@ extension UIPanGestureRecognizer {
     }
 }
 #endif
+
+public extension UIViewController {
+    var panModalPresentationController: PanModalPresentationController? {
+        presentationController as? PanModalPresentationController
+    }
+}
